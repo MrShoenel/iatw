@@ -5,9 +5,9 @@ from collections import deque
 from typing import Iterable
 from typing_extensions import Self
 from warnings import warn
-from iatw.AlignmentModel import AlignmentModel
+from iatw.model.AlignmentModel import AlignmentModel
 from iatw.Computable import Computable
-from iatw.IntervalKernels import IntervalKernel
+from iatw.kernel.IntervalKernels import IntervalKernel
 from iatw.loss.Loss import Loss
 
 
@@ -23,6 +23,13 @@ class AlignmentProblem(Computable):
         self._regularizers: deque[Loss] = deque()
     
     def add_interval_pair_kernel(self, kernel: IntervalKernel) -> Self:
+        """
+        In this AlignmentProblem, we do not allow to have more than one Kernel operating on a single
+        query interval. It is allowed, however, to use composite Kernels and MultiReference-Kernels.
+        """
+        if any(filter(lambda k: k.interval == kernel.interval, self._kernels)):
+            raise Exception('Another Kernel for the enclosed interval was added previously.')
+
         self._kernels.append(kernel)
         return self
 

@@ -1,18 +1,19 @@
 from enum import Enum, auto
 from math import isnan
-#from nptyping import NDArray, Shape, Int as npt_int, Float as npt_float
 from typing import Callable, Iterable, Optional
 from typing_extensions import Self
 from sys import maxsize
 
 from nptyping import NDArray, Shape, Float as npt_float
-from iatw.Intervals import Interval, IntervalType, IntervalWithLength, RelativeLengthInterval
+from iatw.interval.Intervals import Interval, IntervalType, IntervalWithLength, RelativeLengthInterval
 from iatw.loss.Loss import Loss
 from iatw.Parameterized import Parameterized
 from strongtyping.strong_typing import match_typing
 
 from iatw.Parameter import Parameter
 from collections import deque
+
+from jax._src.api import _check_callable
 
 
 class SignalType(Enum):

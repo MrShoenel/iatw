@@ -20,7 +20,7 @@ class IntervalType(Enum):
 
 class Interval(ABC):
     def __init__(self, interval_type: IntervalType, model: Computable, ref_length: float) -> None:
-        from iatw.AlignmentModel import AlignmentModel
+        from iatw.model.AlignmentModel import AlignmentModel
         super().__init__()
         if not type(model) is AlignmentModel:
             raise Exception('Model needs to be of type AlignmentModel')
