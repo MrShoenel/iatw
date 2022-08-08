@@ -1,7 +1,7 @@
-from iatw.IntervalKernels import LinearWarpingKernel
-from iatw.Intervals import MinMaxLengthInterval, RelativeLengthInterval
+from iatw.kernel.IntervalKernels import LinearWarpingKernel
+from iatw.interval.Intervals import MinMaxLengthInterval, RelativeLengthInterval
 from iatw.jax.loss.intervalkernel.RSS import RSS
-from iatw.AlignmentModel import AlignmentModel
+from iatw.model.AlignmentModel import AlignmentModel
 from iatw.Parameter import Parameter
 from tests.JaxTestCase import JaxTestCase
 

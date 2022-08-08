@@ -3,8 +3,8 @@
 
 import numpy as np
 from functools import partial
-from iatw.AlignmentModel import AlignmentModel
-from iatw.IntervalKernels import IntervalKernel
+from iatw.model.AlignmentModel import AlignmentModel
+from iatw.kernel.IntervalKernels import IntervalKernel
 from iatw.Parameter import Parameter
 from iatw.loss.IntervalKernelLoss import IntervalKernelLoss
 from jax import jit, grad, numpy as jnp
