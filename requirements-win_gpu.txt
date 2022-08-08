@@ -1,0 +1,2 @@
+jax==0.3.14
+jaxlib @ https://whls.blob.core.windows.net/unstable/cuda111/jaxlib-0.3.14+cuda11.cudnn82-cp310-none-win_amd64.whl

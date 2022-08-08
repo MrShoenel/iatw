@@ -1,0 +1,2 @@
+jax==0.3.14
+jaxlib @  https://whls.blob.core.windows.net/unstable/cpu/jaxlib-0.3.14-cp310-none-win_amd64.whl
