@@ -1,5 +1,11 @@
 from abc import abstractmethod
+from typing import Any, Union
+from nptyping import Shape, Float, NDArray
+from jax._src.device_array import DeviceArray
 from iatw.Parameterized import Parameterized
+
+FloatLike = Union[float, Float, NDArray[Shape["*"], Float], DeviceArray]
+
 
 
 class Computable(Parameterized):
@@ -7,26 +13,15 @@ class Computable(Parameterized):
         super().__init__()
 
     @abstractmethod
-    def evaluate(self) -> list[float]:#NDArray[Shape["Dim", npt_float]]:
+    def evaluate(self, *args: FloatLike) -> FloatLike:
         """
         Compute this computable, that is, perform all necessary calculations
         and return the numeric outcome(s).
         """
         pass
 
-    def __call__(self) -> list[float]:#NDArray[Shape["Dim", npt_float]]:
+    def __call__(self) -> FloatLike:
         """
         Wrapper for evaluate().
         """
         return self.evaluate()
-
-    # @abstractmethod
-    # def gradient(self) -> NDArray[Shape['Dim'], npt_float]:
-    #     """
-    #     Compute all 1st-order partial derivatives of this model
-    #     """
-    #     pass
-
-    # @abstractmethod
-    # def hessian(self) -> NDArray[Shape['Dim, Dim'], npt_float]:
-    #     pass
