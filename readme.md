@@ -2,14 +2,22 @@
 
 ## Setup
 
-First, recreate conda environment:
+First, recreate and activate the conda environment:
 
 ```
 conda env create --file environment.yml
+conda activate iatw
 ```
 
-Then, continue to install Pypi packages (note: contains a pre-built wheel for `jaxlib` on Windows/Cuda 11.1; if you are on another platform, remove this line first and install `jaxlib` according to your platform):
+Then, continue to install Pypi packages. Start with the `requirements.txt`:
 
 ```
 pip install -r requirements.txt
+```
+
+Then, proceed with the correct `requirements-{platform}_{device}.txt` file to install `jax` and `jaxlib` for your platform (Linux or Windows) and device (CPU or GPU).
+For example, installing for Windows and GPU using:
+
+```
+pip install -r requirements-win_gpu.txt
 ```
