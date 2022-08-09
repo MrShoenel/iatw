@@ -1,11 +1,12 @@
 # iATW
 
-## Setup
+## Setup (development)
 
-First, recreate and activate the conda environment:
+The setup is platform-dependent. Currently supported are Linux and Windows. For GPU usage, you will need to have Cuda in version `11.x` installed.
+First, recreate and activate the conda environment with the correct `environment-{platform}.yml`. For example, recreating the environment for Windows development:
 
 ```
-conda env create --file environment.yml
+conda env create --file environment-win.yml
 conda activate iatw
 ```
 
