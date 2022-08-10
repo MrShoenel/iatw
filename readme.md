@@ -10,10 +10,11 @@ conda env create --file environment-win.yml
 conda activate iatw
 ```
 
-Then, continue to install Pypi packages. Start with the `requirements.txt`:
+Then, continue to install Pypi packages. Start with the `requirements.txt`, followed by `requirements-dev.txt`:
 
 ```
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
 Then, proceed with the correct `requirements-{platform}_{device}.txt` file to install `jax` and `jaxlib` for your platform (Linux or Windows) and device (CPU or GPU).
