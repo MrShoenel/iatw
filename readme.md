@@ -1,15 +1,25 @@
 # iATW
 
-## Setup
+## Setup (development)
 
-First, recreate conda environment:
+The setup is platform-dependent. Currently supported are Linux and Windows. For GPU usage, you will need to have Cuda in version `11.x` installed.
+First, recreate and activate the conda environment with the correct `environment-{platform}.yml`. For example, recreating the environment for Windows development:
 
 ```
-conda env create --file environment.yml
+conda env create --file environment-win.yml
+conda activate iatw
 ```
 
-Then, continue to install Pypi packages (note: contains a pre-built wheel for `jaxlib` on Windows/Cuda 11.1; if you are on another platform, remove this line first and install `jaxlib` according to your platform):
+Then, continue to install Pypi packages. Start with the `requirements.txt`, followed by `requirements-dev.txt`:
 
 ```
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+
+Then, proceed with the correct `requirements-{platform}_{device}.txt` file to install `jax` and `jaxlib` for your platform (Linux or Windows) and device (CPU or GPU).
+For example, installing for Windows and GPU using:
+
+```
+pip install -r requirements-win_gpu.txt
 ```
