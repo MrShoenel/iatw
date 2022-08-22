@@ -1,0 +1,2 @@
+jax==0.3.14
+jaxlib @ https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.3.14+cuda11.cudnn805-cp310-none-manylinux2014_x86_64.whl

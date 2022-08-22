@@ -3,8 +3,6 @@ certifi==2022.6.15
 etils==0.6.0
 flatbuffers==2.0
 importlib-resources==5.8.0
-jax==0.3.14
-jaxlib @ https://whls.blob.core.windows.net/unstable/cuda111/jaxlib-0.3.14+cuda11.cudnn82-cp310-none-win_amd64.whl
 nptyping==2.2.0
 numpy==1.23.0
 opt-einsum==3.3.0
