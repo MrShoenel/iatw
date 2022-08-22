@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from msilib.schema import Error
 from numpy import NaN, isnan
 from nptyping import NDArray, Shape
 from typing import Callable, Any, Iterable, Optional, Tuple
@@ -32,7 +31,7 @@ class Parameter:
     def is_within_bounds(self) -> bool:
         l = [self.value, self.lower_bound, self.upper_bound]
         if any(isnan(l)):
-            raise Error('Cannot perform check if any value is NaN')
+            raise Exception('Cannot perform check if any value is NaN')
         return l[0] >= l[1] and l[0] <= l[2]
     
 
@@ -97,9 +96,9 @@ class Interval(ABC):
     def __init__(self, interval_type: IntervalType, model: Model, ref_length: float) -> None:
         super().__init__()
         if not type(model) is AlignmentModel:
-            raise Error('Model needs to be of type AlignmentModel')
+            raise Exception('Model needs to be of type AlignmentModel')
         if isnan(ref_length) or ref_length <= 0.0:
-            raise Error('The reference length must be greater than 0')
+            raise Exception('The reference length must be greater than 0')
         self.interval_type = interval_type
         self.model = model
         self._ref_length = ref_length
@@ -116,7 +115,7 @@ class Interval(ABC):
     @ref_length.setter
     def ref_length(self, value: float) -> Self:
         if isnan(value) or value <= 0.0:
-            raise Error('The reference length must be greater than 0')
+            raise Exception('The reference length must be greater than 0')
         self._ref_length = value
         return self
 
@@ -135,7 +134,7 @@ class IntervalWithLength(Interval):
     @length.setter
     def length(self, value: float) -> Self:
         if isnan(value) or value < 0.0:
-            raise Error('You must not pass NaN or a negative value for the length')
+            raise Exception('You must not pass NaN or a negative value for the length')
         p = self._params[0]
         p.value = value
         return self
@@ -174,13 +173,13 @@ class MinMaxLengthInterval(IntervalWithLength):
     def min_max_lengths(self, min_max_lengths: Tuple[float, float]) -> Self:
         mm = min_max_lengths
         if isnan(mm[0]) or isnan(mm[1]):
-            raise Error('Neither length must be NaN')
+            raise Exception('Neither length must be NaN')
         if mm[0] >= mm[1]:
-            raise Error('Minimum is larger than or equal to maximum')
+            raise Exception('Minimum is larger than or equal to maximum')
         
         l = self.length()
         if l < mm[0] or l > mm[1]:
-            raise Error('Current length is outside bounds')
+            raise Exception('Current length is outside bounds')
         
         p = self._params[0]
         p.lower_bound = mm[0]
@@ -216,7 +215,7 @@ class FlexibleInterval(IntervalWithLength):
         return m.available_length() # Takes up all of it.
     
     def length(self, value: float):
-        raise Error('A flexible interval cannot have an explicit length')
+        raise Exception('A flexible interval cannot have an explicit length')
 
 
 
@@ -310,7 +309,7 @@ class AlignmentModel(Model):
         if qry_begin.lower_bound >= qry_end.upper_bound:
             # begin-upper and end-lower are essentially ignored, as
             # gamma_b is begin-lower and gamme_e is end-upper
-            raise Error('begin/end bounds misconfigured')
+            raise Exception('begin/end bounds misconfigured')
         self.qry_begin = qry_begin
         self.qry_begin.name = 'begin'
         self.qry_end = qry_end
@@ -327,7 +326,7 @@ class AlignmentModel(Model):
     @match_typing
     def ref_supp(self, value: tuple[float, float]) -> Self:
         if any(isnan(value)) or value[0] >= value[1]:
-            raise Error('The reference support is ill-defined')
+            raise Exception('The reference support is ill-defined')
         self._ref_begin.bounds = value
         return self
     
@@ -339,9 +338,9 @@ class AlignmentModel(Model):
     @match_typing
     def ref_begin(self, value: Parameter) -> Self:
         if value.value is None or isnan(value.value):
-            raise Error('A concrete begin is required')
+            raise Exception('A concrete begin is required')
         if not value.is_within_bounds:
-            raise Error('The begin is not within bounds')
+            raise Exception('The begin is not within bounds')
         self._ref_begin = value
         self.ref_supp = value.bounds
         return self
@@ -363,7 +362,7 @@ class AlignmentModel(Model):
     @match_typing
     def add_interval(self, interval: IntervalWithLength, idx: int=maxsize) -> Self:
         if self.has_flexible_interval and interval.interval_type == IntervalType.FLEXIBLE:
-            raise Error('A model can only have zero to one flexible intervals')
+            raise Exception('A model can only have zero to one flexible intervals')
 
         # Check reference support
         ref_length = self._ref_supp[1] - self._ref_supp[0]
@@ -371,7 +370,7 @@ class AlignmentModel(Model):
             return i.ref_length
         used_ref_length = sum(map(f, self._intervals))
         if used_ref_length + interval.ref_length > ref_length:
-            raise Error(f'Cannot add interval as reference-length would exceed the available length of {ref_length} by {used_ref_length + interval.ref_length - ref_length}')
+            raise Exception(f'Cannot add interval as reference-length would exceed the available length of {ref_length} by {used_ref_length + interval.ref_length - ref_length}')
         
         # Check query support
         # TODO: More checking here before we actually add the intervals
@@ -407,7 +406,7 @@ class AlignmentModel(Model):
     def P_for_x(self, x: float) -> int:
         t = self.reference_boundaries
         if x < t[0] or x > t[-1]:
-            raise Error(f'x={x} is out of range, needs to be {t[0]} <= x <= {t[-1]}.')
+            raise Exception(f'x={x} is out of range, needs to be {t[0]} <= x <= {t[-1]}.')
         
         for idx in range(len(self._intervals) - 1):
             if x >= t[idx] and x < t[idx + 1]:
@@ -425,7 +424,7 @@ class AlignmentModel(Model):
         if self.gamma_d is None:
             # Handled by optimizer + external constraints
             if b.value > e.value:
-                raise Error('Illegal model state, end comes before begin; check inequality constraints')
+                raise Exception('Illegal model state, end comes before begin; check inequality constraints')
             return b.value
         
         # Otherwise, handle this within the model:
@@ -438,7 +437,7 @@ class AlignmentModel(Model):
         e = self.qry_end
         if self.gamma_d is None:
             if b.value > e.value:
-                raise Error('Illegal model state, end comes before begin; check inequality constraints')
+                raise Exception('Illegal model state, end comes before begin; check inequality constraints')
             return e.value
         
         return max(b.lower_bound + self.gamma_d, min(e.upper_bound, max(b.value, e.value)))
